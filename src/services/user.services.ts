@@ -15,7 +15,7 @@ class UserService {
     return await UserModel.findByIdAndUpdate(userId, { password: _hashPassword }, { new: true });
   };
 
-  static loginUser = async (body: loginUserDto): Promise<IUser | null> => {
+  static loginUser = async (body: loginUserDto): Promise<IUser> => {
     const user = await UserModel.findOne({ email: body.email });
 
     if (!user) {
