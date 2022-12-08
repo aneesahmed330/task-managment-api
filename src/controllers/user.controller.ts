@@ -8,22 +8,24 @@ import TokenService from '../services/token.services';
 import tokenTypes from '../config/token';
 
 class UserController {
-  static registerUser = catchAsync(async (req: Request, res: Response) => {
+  static setPassword = catchAsync(async (req: IRequest, res: Response): Promise<Response<any, Record<string, any>>> => {
     try {
-      const user = await UserService.registerUser(req.body);
-      const token = await TokenService.generateAuthTokens(user);
-      return res.send({
-        data: user,
-        token: token,
+      const user = await UserService.setPassword(req.body, req.userId || '');
+      let token;
+      if (user) {
+        token = await TokenService.generateAuthTokens(user);
+      }
+      return res.status(200).send({
+        data: 'User password has been set!',
+        token,
+        msg: 'success',
         status: 200,
-        msg: 'User has been registered !',
       });
     } catch (e: any) {
       throw new ApiError(e?.statusCode || httpStatus.INTERNAL_SERVER_ERROR, e.message);
     }
   });
-
-  static loginUser = catchAsync(async (req: Request, res: Response) => {
+  static loginUser = catchAsync(async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
     try {
       const user = await UserService.loginUser(req.body);
       const token = await TokenService.generateAuthTokens(user);
@@ -36,7 +38,7 @@ class UserController {
       throw new ApiError(e?.statusCode || httpStatus.INTERNAL_SERVER_ERROR, e.message);
     }
   });
-  static sendOtp = catchAsync(async (req: Request, res: Response) => {
+  static sendOtp = catchAsync(async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
     try {
       const msg = await UserService.sendOtp(req.body);
       return res.status(200).send({
@@ -48,8 +50,7 @@ class UserController {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, e.message);
     }
   });
-
-  static verifyOtp = catchAsync(async (req: Request, res: Response) => {
+  static verifyOtp = catchAsync(async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
     try {
       const { data, token } = await UserService.verifyOtp(req.body);
       return res.status(200).send({
@@ -61,8 +62,7 @@ class UserController {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, e.message);
     }
   });
-
-  static resetPassword = catchAsync(async (req: IRequest, res: Response) => {
+  static resetPassword = catchAsync(async (req: IRequest, res: Response): Promise<Response<any, Record<string, any>>> => {
     try {
       if (req.type === tokenTypes.RESETPASSWORD) {
         const { msg, status } = await UserService.resetPassword(req.body, req.userId || '');
@@ -71,7 +71,7 @@ class UserController {
           status,
         });
       } else {
-        res.status(400).send({
+        return res.status(400).send({
           msg: 'Either Token expire or  Invalid!',
           status: 400,
         });

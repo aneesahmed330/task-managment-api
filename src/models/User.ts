@@ -1,12 +1,21 @@
+import { Roles } from './../enums/roles';
 import { Schema, model } from 'mongoose';
 import { IUser } from '../interfaces/IUser';
 
 const userSchema = new Schema<IUser>(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    name: { type: String, required: false },
     email: { type: String, required: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false },
+    imageUrl: {
+      type: String,
+      required: false,
+    },
+    role: {
+      type: String,
+      default: Roles.USER,
+      enum: Object.values(Roles),
+    },
   },
   {
     collection: 'users',

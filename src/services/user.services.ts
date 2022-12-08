@@ -1,4 +1,4 @@
-import { registerUserDto, loginUserDto, resetPasswordDto } from './../dto/user.dto';
+import { setPasswordDto, loginUserDto, resetPasswordDto } from './../dto/user.dto';
 import { IUser } from './../interfaces/IUser';
 import httpStatus from 'http-status';
 import UserModel from '../models/User';
@@ -10,28 +10,27 @@ import MailService from './mail.services';
 import TokenService from './token.services';
 
 class UserService {
-  static registerUser = async (body: registerUserDto): Promise<IUser> => {
-    if (!!(await UserModel.findOne({ email: body.email }))) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already taken!');
-    }
-
-    body.password = await hashPassword(body.password);
-    return await UserModel.create(body);
+  static setPassword = async (body: setPasswordDto, userId: string): Promise<IUser | null> => {
+    const _hashPassword = await hashPassword(body.password);
+    return await UserModel.findByIdAndUpdate(userId, { password: _hashPassword }, { new: true });
   };
 
-  static loginUser = async (body: loginUserDto): Promise<IUser> => {
+  static loginUser = async (body: loginUserDto): Promise<IUser | null> => {
     const user = await UserModel.findOne({ email: body.email });
 
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, 'email or password is incorrect!');
     }
 
-    const valid = await unHashPassword(body.password, user.password);
-    if (!valid) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'email or password is incorrect!');
+    if (user.password) {
+      const valid = await unHashPassword(body.password, user.password);
+      if (!valid) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'email or password is incorrect!');
+      }
+      return user;
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Kindly set your password , using the link sent in the email');
     }
-
-    return user;
   };
 
   static sendOtp = async (body: resetPasswordDto): Promise<string> => {
@@ -58,7 +57,11 @@ class UserService {
       const passcode = await PassCodeModel.findOne({ email: body.email });
       if (passcode) {
         if (passcode?.code === body.code) {
-          const token = await TokenService.generateResetToken(passcode.userId);
+          let token = '';
+          const _user = await UserModel.findOne({ _id: passcode.userId });
+          if (_user) {
+            token = await TokenService.generateResetToken(_user);
+          }
           await PassCodeModel.deleteOne({ _id: passcode._id });
           return {
             data: 'Otp verified successfully!',

@@ -13,6 +13,7 @@ const envVarsSchema = Joi.object()
     DB_NAME: Joi.string().required().description('DB Name'),
     AWS_ACCESS_KEY: Joi.string().required().description('Aws Access key.'),
     AWS_SECRET_KEY: Joi.string().required().description('Aws Secret key.'),
+    AWS_REGION: Joi.string().required().description('Aws region required.'),
     AWS_BUCKET: Joi.string().required().description('Aws Bucket Name.'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_TIME: Joi.string().description('minutes after which access tokens expire'),
@@ -21,6 +22,8 @@ const envVarsSchema = Joi.object()
     SENDGRID_SENDER_EMAIL: Joi.string().required().description('SendGrid sender email is required'),
     AWS_MAX_FILE_UPLOAD_SIZE_MB: Joi.string().default(process.env.AWS_MAX_FILE_UPLOAD_SIZE_MB || 2),
     AWS_MAX_FILES_UPLOAD_ALLOW: Joi.string().default(process.env.AWS_MAX_FILES_UPLOAD_ALLOW || 5),
+    NODE_MAILER_EMAIL: Joi.string().required().description('gmail sender email'),
+    NODE_MAILER_PASSWORD: Joi.string().required().description('gmail sender pass'),
   })
   .unknown();
 
@@ -55,9 +58,14 @@ const config: IConfig = {
   aws: {
     accessKeyId: envVars.AWS_ACCESS_KEY,
     secretAccessKey: envVars.AWS_SECRET_KEY,
+    region: envVars.AWS_REGION,
     bucket: envVars.AWS_BUCKET,
     maxFileSize: envVars.AWS_MAX_FILE_UPLOAD_SIZE_MB,
     maxUploads: envVars.AWS_MAX_FILES_UPLOAD_ALLOW,
+  },
+  gmail: {
+    email: envVars.NODE_MAILER_EMAIL,
+    pass: envVars.NODE_MAILER_PASSWORD,
   },
 };
 

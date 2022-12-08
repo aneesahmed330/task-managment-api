@@ -7,7 +7,7 @@ import UserController from '../controllers/user.controller';
 const router = express.Router();
 
 //! register user
-router.post('/register', validate(UserValidator.registerUser), UserController.registerUser);
+router.post('/set-password', AUTHENTICATE, UserController.setPassword);
 
 //! login user
 router.post('/login', validate(UserValidator.loginUser), UserController.loginUser);

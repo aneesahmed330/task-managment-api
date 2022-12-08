@@ -1,7 +1,18 @@
-export interface registerUserDto {
-  firstName: string;
-  lastName: string;
+import { Roles } from './../enums/roles';
+export interface createAdminDto {
+  name?: string;
   email: string;
+  password: string;
+  imageUrl: string;
+  role?: Roles.ADMIN;
+}
+
+export interface createAdminUserDto {
+  email: string;
+  role?: Roles.USER;
+}
+
+export interface setPasswordDto {
   password: string;
 }
 

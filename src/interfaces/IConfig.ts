@@ -22,8 +22,13 @@ export interface IConfig {
   aws: {
     accessKeyId: string;
     secretAccessKey: string;
+    region: string;
     bucket: string;
     maxFileSize: number;
     maxUploads: number;
+  };
+  gmail: {
+    email: string;
+    pass: string;
   };
 }

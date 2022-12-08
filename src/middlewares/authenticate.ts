@@ -5,18 +5,21 @@ import { Response, NextFunction } from 'express';
 import { IRequest } from '../interfaces/IRequest';
 export const AUTHENTICATE = (req: IRequest, res: Response, next: NextFunction) => {
   try {
-    // console.log('req.headers.authorization ', req.headers.authorization);
+    console.log('req.headers.authorization ', req.headers.authorization);
     if (!req.headers.authorization || !req.headers.authorization.startsWith(config.AUTH_HEADER_PREFIX)) {
       Unauthorized(res);
     } else {
       const authToken = req.headers.authorization.split(' ')[1];
+      console.log('token', authToken);
       JWT.verify(
         authToken,
         config.jwtSecret,
         {},
         async (err: VerifyErrors | null, decoded: string | JwtPayload | undefined): Promise<void | Response<any, Record<string, any>>> => {
           if (err) {
-            return Unauthorized(res);
+            if (err instanceof JWT.TokenExpiredError) {
+              return Unauthorized(res, 'Token has been expired!, contact admin to create new link to set password ');
+            }
           } else {
             if (!decoded || !decoded.sub) {
               return Unauthorized(res);
@@ -45,9 +48,10 @@ export const AUTHENTICATE = (req: IRequest, res: Response, next: NextFunction) =
   }
 };
 
-const Unauthorized = (res: Response) => {
+const Unauthorized = (res: Response, msg?: string) => {
+  // let msg='';
   return res.status(403).send({
     status: false,
-    message: 'Unauthorized',
+    message: msg || 'Unauthorized',
   });
 };
