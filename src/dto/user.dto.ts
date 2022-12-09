@@ -1,4 +1,4 @@
-import { Roles } from './../enums/roles';
+import { Roles } from './../enums';
 export interface createAdminDto {
   name?: string;
   email: string;

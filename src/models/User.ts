@@ -1,4 +1,4 @@
-import { Roles } from './../enums/roles';
+import { Roles } from './../enums';
 import { Schema, model } from 'mongoose';
 import { IUser } from '../interfaces/IUser';
 

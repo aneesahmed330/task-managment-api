@@ -1,4 +1,4 @@
-import { Roles } from 'enums/roles';
+import { Roles } from '../enums';
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import config from '../config/config';

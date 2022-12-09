@@ -3,7 +3,7 @@ import { createAdminDto, createAdminUserDto } from './../dto/user.dto';
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
 import UserModel from '../models/User';
-import { Roles } from '../enums/roles';
+import { Roles } from '../enums';
 
 class AdminService {
   static createAdmin = async (body: createAdminDto): Promise<IUser> => {
