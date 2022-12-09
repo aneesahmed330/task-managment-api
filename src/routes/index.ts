@@ -3,6 +3,7 @@ const router = Router();
 import AdminRoute from './admin.routes';
 import UserRoute from './user.routes';
 import TaskRoute from './task.routes';
+import ProjectRoute from './project.routes';
 
 const defaultRoutes = [
   {
@@ -16,6 +17,10 @@ const defaultRoutes = [
   {
     path: '/task',
     route: TaskRoute,
+  },
+  {
+    path: '/project',
+    route: ProjectRoute,
   },
 ];
 
