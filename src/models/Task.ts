@@ -12,13 +12,21 @@ const taskSchema = new Schema<ITask>(
       type: mongoose.SchemaTypes.ObjectId,
       ref: 'Project',
     },
+    description: {
+      type: String,
+      required: true,
+    },
     type: {
       type: String,
       enum: Object.values(taskType),
       required: true,
     },
     date: {
-      type: Date,
+      type: String,
+      required: true,
+    },
+    time: {
+      type: String,
       required: true,
     },
   },
