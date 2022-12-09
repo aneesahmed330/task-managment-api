@@ -11,7 +11,24 @@ class MailService {
         code: passcode,
       });
 
-      await this.sendMail(email, 'Password reset email', template);
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: config.gmail.email,
+          pass: config.gmail.pass,
+        },
+      });
+
+      await transporter.sendMail({
+        from: config.gmail.email,
+        to: email,
+        subject: 'Time Tracker Account Password Reset', // Subject line
+        html: template,
+      });
+
       return 'Mail with security code has been sent!';
     } catch (error) {
       console.log('error=> ', error);
@@ -21,12 +38,9 @@ class MailService {
 
   static accountCreationMail = async (url: string, email: string): Promise<string> => {
     try {
-      // seems to b html
       const template = await ejs.renderFile(__dirname + '/../templates/accountCreation.ejs', {
         url,
       });
-
-      // Only needed if you don't have a real mail account for testing
 
       const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -34,17 +48,16 @@ class MailService {
         port: 465,
         secure: true,
         auth: {
-          user: config.gmail.email, // generated ethereal user
-          pass: config.gmail.pass, // generated ethereal password
+          user: config.gmail.email,
+          pass: config.gmail.pass,
         },
       });
 
-      // send mail with defined transport object
       await transporter.sendMail({
-        from: config.gmail.email, // sender address
-        to: email, // list of receivers
-        subject: 'Time Tracker Account Creation Mail', // Subject line
-        html: template, // html body
+        from: config.gmail.email,
+        to: email,
+        subject: 'Time Tracker Account Creation Mail',
+        html: template,
       });
 
       return 'Mail has been sent to the user!';

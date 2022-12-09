@@ -10,8 +10,8 @@ export enum Roles {
 }
 
 export enum taskType {
-  checkIn = 'check-in',
-  checkOut = 'check-out',
+  dayStart = 'day-start',
+  dayEnd = 'day-end',
 }
 
 export const mimeTypesArray: string[] = Object.values(MimeTypes);

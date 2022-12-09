@@ -17,6 +17,7 @@ class UserService {
 
   static loginUser = async (body: loginUserDto): Promise<IUser> => {
     const user = await UserModel.findOne({ email: body.email });
+    console.log('user -', user);
 
     if (!user) {
       throw new ApiError(httpStatus.NOT_FOUND, 'email or password is incorrect!');

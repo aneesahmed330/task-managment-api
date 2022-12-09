@@ -26,9 +26,11 @@ export const AUTHENTICATE = (req: IRequest, res: Response, next: NextFunction) =
             } else {
               let userId;
               let type;
+              let role;
               if (typeof decoded === 'object') {
                 userId = decoded.sub;
                 type = decoded.type;
+                role = decoded.role;
               }
               const user = await UserModel.findById(userId);
               if (!user) {
@@ -37,6 +39,7 @@ export const AUTHENTICATE = (req: IRequest, res: Response, next: NextFunction) =
 
               req.userId = userId as string;
               req.type = type;
+              req.role = role;
               next();
             }
           }

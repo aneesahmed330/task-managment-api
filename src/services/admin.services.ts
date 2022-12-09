@@ -1,3 +1,4 @@
+import { hashPassword } from './../utils/hash.password';
 import { IUser } from './../interfaces/IUser';
 import { createAdminDto, createAdminUserDto } from './../dto/user.dto';
 import httpStatus from 'http-status';
@@ -10,8 +11,8 @@ class AdminService {
     if (!!(await UserModel.findOne({ email: body.email }))) {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Email is already taken!');
     }
-    console.log('admin created!');
     body.role = Roles.ADMIN;
+    body.password = await hashPassword(body.password);
     return await UserModel.create(body);
   };
   static createUser = async (body: createAdminUserDto): Promise<IUser> => {

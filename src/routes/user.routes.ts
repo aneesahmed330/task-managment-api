@@ -6,7 +6,7 @@ import UserController from '../controllers/user.controller';
 
 const router = express.Router();
 
-//! register user
+//! set password
 router.post('/set-password', AUTHENTICATE, UserController.setPassword);
 
 //! login user
