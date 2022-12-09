@@ -2,6 +2,7 @@ import { Router } from 'express';
 const router = Router();
 import AdminRoute from './admin.routes';
 import UserRoute from './user.routes';
+import ProjectRoute from './project.routes';
 
 const defaultRoutes = [
   {
@@ -11,6 +12,10 @@ const defaultRoutes = [
   {
     path: '/admin',
     route: AdminRoute,
+  },
+  {
+    path: '/project',
+    route: ProjectRoute,
   },
 ];
 
