@@ -1,7 +1,6 @@
 import config from '../config/config';
 import sgMail from '@sendgrid/mail';
 import ejs from 'ejs';
-// import AWS from '../config/aws.config';
 import nodemailer from 'nodemailer';
 
 class MailService {
