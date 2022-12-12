@@ -1,11 +1,11 @@
 import { IPasscode } from './../interfaces/IPasscode';
-import { Schema, model } from 'mongoose';
+import { Schema, model, SchemaTypes } from 'mongoose';
 
-const LikeSchema = new Schema<IPasscode>(
+const pascodeSchema = new Schema<IPasscode>(
   {
     code: { type: Number, required: true },
     email: { type: String, required: true },
-    userId: { type: String, required: true },
+    userId: { type: SchemaTypes.ObjectId, ref: 'User', required: true },
     attempts: {
       type: Number,
       required: true,
@@ -17,5 +17,5 @@ const LikeSchema = new Schema<IPasscode>(
   },
 );
 
-const Passcode = model<IPasscode>('Passcode', LikeSchema);
+const Passcode = model<IPasscode>('Passcode', pascodeSchema);
 export default Passcode;

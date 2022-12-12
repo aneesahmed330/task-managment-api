@@ -9,6 +9,7 @@ const envVarsSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid('development', 'production').required(),
     PORT: Joi.number().default(process.env.PORT || 1336),
+    CREATE_ADMIN_FLAG: Joi.boolean().default(process.env.CREATE_ADMIN_FLAG || false),
     MONGODB_URL: Joi.string().required().description('Mongo DB url'),
     DB_NAME: Joi.string().required().description('DB Name'),
     AWS_ACCESS_KEY: Joi.string().required().description('Aws Access key.'),
@@ -67,6 +68,7 @@ const config: IConfig = {
     email: envVars.NODE_MAILER_EMAIL,
     pass: envVars.NODE_MAILER_PASSWORD,
   },
+  createAdmin: envVars.CREATE_ADMIN_FLAG,
 };
 
 export default config;

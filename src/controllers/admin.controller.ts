@@ -26,7 +26,9 @@ class AdminController {
 
   static createUser = catchAsync(async (req: IRequest, res: Response) => {
     try {
-      if (req.role !== Roles.ADMIN) {
+      console.log('role => ', req.role);
+
+      if (Number(req.role) !== Roles.ADMIN) {
         throw new ApiError(httpStatus.UNAUTHORIZED, "you don't have access to perform that action!");
       }
 

@@ -31,4 +31,5 @@ export interface IConfig {
     email: string;
     pass: string;
   };
+  createAdmin: boolean;
 }
