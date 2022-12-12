@@ -33,9 +33,9 @@ class UserController {
       return res.send({
         AccessToken: token,
         status: 200,
+        user,
         msg: 'User logged in successfully !',
       });
-      
     } catch (e: any) {
       throw new ApiError(e?.statusCode || httpStatus.INTERNAL_SERVER_ERROR, e.message);
     }
