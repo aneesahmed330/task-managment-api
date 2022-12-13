@@ -6,6 +6,7 @@ import express, { Request, Response, NextFunction, Express } from 'express';
 import routes from './routes';
 import { errorConverter, errorHandler } from './middlewares/error';
 import ApiError from './utils/ApiError';
+import cors from 'cors';
 
 // create app
 const app: Express = express();
@@ -13,6 +14,8 @@ const app: Express = express();
 // set security HTTP headers
 app.use(helmet());
 
+app.use(cors());
+app.options('*', cors());
 // parse json request body
 app.use(express.json());
 

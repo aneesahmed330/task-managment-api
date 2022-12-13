@@ -17,6 +17,7 @@ class UserController {
       }
       return res.status(200).send({
         data: 'User password has been set!',
+        user,
         token,
         msg: 'success',
         status: 200,
