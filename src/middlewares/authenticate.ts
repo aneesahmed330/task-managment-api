@@ -10,6 +10,9 @@ export const AUTHENTICATE = (req: IRequest, res: Response, next: NextFunction) =
       Unauthorized(res);
     } else {
       const authToken = req.headers.authorization.split(' ')[1];
+      if (!authToken) {
+        Unauthorized(res);
+      }
       console.log('token', authToken);
       JWT.verify(
         authToken,
@@ -20,6 +23,14 @@ export const AUTHENTICATE = (req: IRequest, res: Response, next: NextFunction) =
             if (err instanceof JWT.TokenExpiredError) {
               return Unauthorized(res, 'Token has been expired!, contact admin to create new link to set password ');
             }
+            if (err instanceof JWT.JsonWebTokenError) {
+              return Unauthorized(res, 'Invalid Token!');
+            }
+
+            if (err) {
+              return Unauthorized(res, 'Invalid Token!');
+            }
+            console.log('err', err);
           } else {
             if (!decoded || !decoded.sub) {
               return Unauthorized(res);
