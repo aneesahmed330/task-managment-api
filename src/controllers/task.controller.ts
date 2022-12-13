@@ -17,6 +17,17 @@ class TaskController {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, (e as Error).message);
     }
   });
+  static getUserTask = catchAsync(async (req: IRequest, res: Response) => {
+    try {
+      const tasks = await TaskService.getUserTask(req.userId || '');
+      res.send({
+        tasks,
+        status: 200,
+      });
+    } catch (e) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, (e as Error).message);
+    }
+  });
 }
 
 export default TaskController;

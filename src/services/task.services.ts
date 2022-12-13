@@ -1,10 +1,11 @@
+import { ITask } from './../interfaces/ITask';
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
 import moment from 'moment';
 import TaskModel from '../models/Task';
 import { taskType } from '../enums';
 class TaskService {
-  static createTask = async (body: any, userId: string) => {
+  static createTask = async (body: any, userId: string): Promise<ITask> => {
     body.userId = userId;
     body.date = moment().format('YYYY-MM-DD');
     body.time = moment().format('HH:mm:ss');
@@ -22,11 +23,8 @@ class TaskService {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Already entered');
     }
 
-
     if (body.type === taskType.dayEnd.toString()) {
-      console.log('hhhh');
       const startEntry = tasks.filter((t) => t.type === taskType.dayStart);
-      console.log('startEntry', startEntry);
       if (startEntry.length > 0) {
         return await TaskModel.create(body);
       } else {
@@ -35,6 +33,9 @@ class TaskService {
     } else {
       return await TaskModel.create(body);
     }
+  };
+  static getUserTask = async (userId: string): Promise<ITask[]> => {
+    return await TaskModel.find({ userId });
   };
 }
 
