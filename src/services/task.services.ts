@@ -4,6 +4,7 @@ import ApiError from '../utils/ApiError';
 import moment from 'moment';
 import TaskModel from '../models/Task';
 import { taskType } from '../enums';
+import mongoose from 'mongoose';
 class TaskService {
   static createTask = async (body: any, userId: string): Promise<ITask> => {
     body.userId = userId;
@@ -35,7 +36,24 @@ class TaskService {
     }
   };
   static getUserTask = async (userId: string): Promise<ITask[]> => {
-    return await TaskModel.find({ userId });
+    return await TaskModel.aggregate([
+      { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: 'projects',
+          localField: 'projectId',
+          foreignField: '_id',
+          as: 'projectId',
+        },
+      },
+      {
+        $addFields: { projectId: { $arrayElemAt: ['$projectId', 0] } },
+      },
+      {
+        $unset: ['__v', 'projectId.__v', 'projectId.createdAt', 'projectId.updatedAt'],
+      },
+    ]);
+    // return await TaskModel.find({ userId });
   };
 }
 
