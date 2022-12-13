@@ -29,13 +29,11 @@ class UserController {
   static loginUser = catchAsync(async (req: Request, res: Response): Promise<Response<any, Record<string, any>>> => {
     try {
       const user = await UserService.loginUser(req.body);
-
       const token = await TokenService.generateAuthTokens(user);
+
       return res.send({
-        AccessToken: token,
+        user: { ...JSON.parse(JSON.stringify(user)), token },
         status: 200,
-        user,
-        msg: 'User logged in successfully !',
       });
     } catch (e: any) {
       throw new ApiError(e?.statusCode || httpStatus.INTERNAL_SERVER_ERROR, e.message);
