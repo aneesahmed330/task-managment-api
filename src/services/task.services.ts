@@ -47,10 +47,10 @@ class TaskService {
         },
       },
       {
-        $addFields: { projectId: { $arrayElemAt: ['$projectId', 0] } },
+        $addFields: { projectName: { $arrayElemAt: ['$projectId.name', 0] } },
       },
       {
-        $unset: ['__v', 'projectId.__v', 'projectId.createdAt', 'projectId.updatedAt'],
+        $unset: ['__v', 'projectId'],
       },
     ]);
     // return await TaskModel.find({ userId });
