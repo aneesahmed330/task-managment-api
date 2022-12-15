@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/create-task', AUTHENTICATE, TaskController.createTask);
 router.get('/get-tasks', AUTHENTICATE, TaskController.getUserTask);
+router.get('/get-activity', AUTHENTICATE, TaskController.getActivity);
 
 export default router;

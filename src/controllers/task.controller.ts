@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import ApiError from '../utils/ApiError';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { IRequest } from './../interfaces/IRequest';
 import catchAsync from '../utils/catchAsync';
 import TaskService from '../services/task.services';
@@ -26,6 +26,19 @@ class TaskController {
       });
     } catch (e) {
       throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, (e as Error).message);
+    }
+  });
+
+  static getActivity = catchAsync(async (_req: Request, res: Response) => {
+    try {
+      const data = await TaskService.getActivity();
+      res.send({
+        data,
+        msg: 'success',
+        status: 200,
+      });
+    } catch (e: any) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, e.message);
     }
   });
 }

@@ -55,6 +55,37 @@ class TaskService {
     ]);
     // return await TaskModel.find({ userId });
   };
+
+  static getActivity = async () => {
+    await TaskModel.aggregate([
+      {
+        $group: {
+          _id: '$date',
+          userId: { $first: '$userId' },
+          projectId: { $first: '$projectId' },
+          dayStartStatus: { $first: '$description' },
+          dayEndStatus: { $last: '$description' },
+          startTime: { $first: '$createdAt' },
+          endTime: { $last: '$createdAt' },
+        },
+      },
+      {
+        $addFields: {
+          duration: {
+            $dateToString: {
+              date: {
+                $dateFromParts: {
+                  year: 2022,
+                  millisecond: { $subtract: ['$endTime', '$startTime'] },
+                },
+              },
+              format: '%H:%M:%S',
+            },
+          },
+        },
+      },
+    ]);
+  };
 }
 
 export default TaskService;
